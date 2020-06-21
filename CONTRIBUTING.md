@@ -22,3 +22,11 @@ When opening Eclipse you will most likely be prompted to select a workspace, nav
 If you are not prompted, go to `File -> Switch Workspace -> Other...`
 
 If all has gone well, you should see `robo.race` and `robo.race.tests` projects in the Package Explorer.
+
+## Branching Strategy
+
+- `master` will represent a release-able state of the software.
+- `dev` will be used to merge feature branches.
+- `feature/<feature>` will be used for feature branches.
+
+Merging between the above branches will be done exclusively using Pull Requests on GitHub.
