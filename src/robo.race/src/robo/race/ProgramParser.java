@@ -19,7 +19,7 @@ public class ProgramParser {
 		ArrayList<String> instructions = new ArrayList<String>();
 		
 		//Read file
-		File file = new File("instructionsTest.txt"); 
+		File file = new File(filePath); 
 		Scanner sc = new Scanner(file); 
 		int lineCount = 0;
 	    while (sc.hasNextLine()) {
@@ -86,11 +86,6 @@ public class ProgramParser {
 	    }
 	    //Return array of all programs
 	    return programs;
-	}
-	
-	public static void main(String[] args) throws Exception 
-	{
-		ProgramParser.parse("test");
 	}
 
 }
