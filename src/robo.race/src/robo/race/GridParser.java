@@ -22,10 +22,17 @@ public class GridParser {
 		
 		try {
 			int lineCount = 0;
+			int previousRowWidth = 0;
 			while (sc.hasNextLine()) {
 				if (lineCount > 0) {
 					String line = sc.nextLine();
 					char[] rawEntities = line.toCharArray();
+					
+					if (lineCount > 1 && previousRowWidth != rawEntities.length) {
+						throw new GridParserException("Row width inconsistent.");
+					}
+					
+					previousRowWidth = rawEntities.length;
 					
 					GridEntity[] entities = new GridEntity[rawEntities.length];
 					
@@ -66,8 +73,6 @@ public class GridParser {
 		} finally {
 			sc.close();
 		}
-		
-		// TODO: check that all rows are of same length.
 		
 		Grid grid = new Grid((GridEntity[][])allEntities.toArray());
 		
