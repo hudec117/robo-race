@@ -6,10 +6,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 //********************************************************
-// Name: ProgramParser
-// Description: Takes an instructions files and outputs Programs
-//              for the robots to follow
-//
+//  Name: ProgramParser
+//  Description: Takes an instructions file and outputs Programs
+//               for the robots to follow
 //********************************************************
 public class ProgramParser {
 	
@@ -71,7 +70,10 @@ public class ProgramParser {
 	                    break; 
 	                case 'W': 
 	                	instructionQueue.add(RobotInstruction.Wait); 
-	                    break; 
+	                    break;
+	                default:
+	                    //File doesn't match correct format, return null
+	                	return null;
 	            } 
 	    	    
 	    	}
