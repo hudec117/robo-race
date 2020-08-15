@@ -67,6 +67,8 @@ public class GridParser {
 			sc.close();
 		}
 		
+		// TODO: check that all rows are of same length.
+		
 		Grid grid = new Grid((GridEntity[][])allEntities.toArray());
 		
 		return grid;
