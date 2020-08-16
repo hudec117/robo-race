@@ -1,9 +1,23 @@
 package robo.race.entities;
 
 public class Gear extends GridEntity {
-	private RotationDirection direction;
+	private RotationDirection rotationDirection;
 	
 	public Gear(RotationDirection direction) {
-		this.direction = direction;
+		this.rotationDirection = direction;
+	}
+
+	public RotationDirection getRotationDirection() {
+		return rotationDirection;
+	}
+
+	@Override
+	public void act(Robot robot) {
+		robot.rotate(rotationDirection);
+	}
+
+	@Override
+	public void react(Robot robot) {
+		throw new UnsupportedOperationException();
 	}
 }
