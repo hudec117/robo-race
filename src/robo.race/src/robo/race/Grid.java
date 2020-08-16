@@ -1,5 +1,9 @@
 package robo.race;
 
-public class Grid {
+import robo.race.entities.GridEntity;
 
+public class Grid {
+	public Grid(GridEntity[][] entities) {
+		
+	}
 }
