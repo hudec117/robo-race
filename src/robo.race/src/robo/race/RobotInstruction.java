@@ -7,4 +7,5 @@ public enum RobotInstruction {
 	RotateRight,
 	UTurn,
 	Wait
+
 }

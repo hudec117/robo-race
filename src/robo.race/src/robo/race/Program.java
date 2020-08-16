@@ -33,5 +33,8 @@ public class Program {
 	//Set the instructions
 	public void setInstructions(Queue<RobotInstruction> instructions) {
 		this.instructions = instructions;
-	}
+  }
 }
+
+
+
