@@ -74,8 +74,6 @@ public class GridParser {
 			sc.close();
 		}
 		
-		Grid grid = new Grid((GridEntity[][])allEntities.toArray());
-		
-		return grid;
+		return new Grid((GridEntity[][])allEntities.toArray());
 	}
 }
