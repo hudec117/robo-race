@@ -108,6 +108,10 @@ public class Robot extends GridEntity {
 		this.nextFlagNum = nextFlagNum;
 	}
 	
+	public Coordinate getStartingPosition() {
+		return this.startingPosition;
+	}
+	
 	@Override
 	public void act(Robot robot) {
 		// TODO Auto-generated method stub
