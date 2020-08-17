@@ -1,10 +1,12 @@
 package robo.race;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import robo.race.entities.CompassDirection;
 import robo.race.entities.GridEntity;
 import robo.race.entities.Robot;
+import robo.race.entities.StartingPosition;
 
 public class Grid {
 	GridEntity[][] entities;
@@ -14,18 +16,45 @@ public class Grid {
 	public Grid (GridEntity[][] entities) {
 		this.entities = entities;
 		this.robots = new HashMap<Robot, Coordinate>();
+		linkEntitiesToGrid(); //Associates each entity with the grid
+	}
+	
+	private void populateStartingPositions() {
+		ArrayList<GridEntity> startingPositions = new ArrayList<GridEntity>();
+		for (GridEntity[] row : entities) {
+			for (GridEntity col : row) {
+				if(col instanceof StartingPosition) {
+					startingPositions.add(col);
+				}
+			}
+		}
+		//Sort starting positions
+	}
+	
+	private void linkEntitiesToGrid() {
+		for (GridEntity[] row : entities) {
+			for (GridEntity col : row) {
+				if(col != null) {
+					col.setGrid(this);
+				}
+			}
+		}
 	}
 	
 	//Print out the grid
 	public void print() {
+        String gridString = ""; //Stores the grid
 		for (GridEntity[] row : entities) {
-            String grid = "";
-            for (GridEntity col : row) {
-                grid += col;
+            for (GridEntity col : row) { //Loop through each row and add toString of entity
+                if(col == null) {
+                	gridString += ".";
+                } else {
+                	gridString += col.toString();
+                }
             }
-            grid += "\n";
-            System.out.println(grid);
+            gridString += "\n";
         }
+		System.out.println(gridString);
 	}
 	
 	//Adds robot to the robots map with its coordinate

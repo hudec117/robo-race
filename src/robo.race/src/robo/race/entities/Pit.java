@@ -5,7 +5,20 @@ public class Pit extends GridEntity {
 		 throw new UnsupportedOperationException("Invalid operation");
 	}
 	
-	void react() {
-		Robot.destroy();
+	public void react(Robot robot) {
+		robot.destroy();
 	}
+
+	@Override
+	public void act(Robot robot) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "X";
+		
+	}
+
 }
