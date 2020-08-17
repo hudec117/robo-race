@@ -22,4 +22,9 @@ public class Flag extends GridEntity {
 			robot.setNextFlagNumber(number + 1);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return Integer.toString(number);
+	}	
 }
