@@ -112,6 +112,10 @@ public class Robot extends GridEntity {
 		return this.startingPosition;
 	}
 	
+	public CompassDirection getCompassDirection() {
+		return heading;
+	}
+	
 	@Override
 	public void act(Robot robot) {
 		// TODO Auto-generated method stub
