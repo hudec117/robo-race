@@ -20,4 +20,9 @@ public class Gear extends GridEntity {
 	public void react(Robot robot) {
 		throw new UnsupportedOperationException();
 	}
+	
+	@Override
+	public String toString() {
+		return rotationDirection.toString();
+	}
 }
