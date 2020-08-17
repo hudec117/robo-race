@@ -6,23 +6,63 @@ import robo.race.RobotInstruction;
 
 public class Robot extends GridEntity {
 	Coordinate startingPosition;
+	Grid grid;
 	CompassDirection heading = CompassDirection.NORTH;
 	int nextFlagNum = 1;
+	String letter;
 	
 	//Constructor
 	public Robot(Grid grid, Coordinate startingPosition) {
 		this.startingPosition = startingPosition;
+		this.grid  = grid;
 	}
 	
 	//Perform instruction
 	public void perform(RobotInstruction instruction) {
+		Coordinate pos = this.getCurrentPosition();
 		switch(instruction)
 		{
 		case Forward: //Move Robot forward
-			//Grid.moveRobot()
+			switch(heading) //Check which way robot is facing before moving forward
+            { 
+                case NORTH: 
+                	Coordinate newPosN = new Coordinate(pos.getX(), pos.getY()-1);
+                	grid.moveRobot(this, newPosN);
+                    break; 
+                case EAST: 
+                	Coordinate newPosE = new Coordinate(pos.getX()+1, pos.getY());
+                	grid.moveRobot(this, newPosE);
+                    break; 
+                case SOUTH: 
+                	Coordinate newPosS = new Coordinate(pos.getX(), pos.getY()+1);
+                	grid.moveRobot(this, newPosS);
+                    break;
+                case WEST: 
+                	Coordinate newPosW = new Coordinate(pos.getX()-1, pos.getY());
+                	grid.moveRobot(this, newPosW);
+                    break; 
+            } 
 			break;
 		case Backward: //Move Robot backwards
-			//Grid.moveRobot(robot, newCoordinate)
+			switch(heading) //Check which way robot is facing before moving backwards
+            { 
+                case NORTH: 
+                	Coordinate newPosN = new Coordinate(pos.getX(), pos.getY()+1);
+                	grid.moveRobot(this, newPosN);
+                    break; 
+                case EAST: 
+                	Coordinate newPosE = new Coordinate(pos.getX()-1, pos.getY());
+                	grid.moveRobot(this, newPosE);
+                    break; 
+                case SOUTH: 
+                	Coordinate newPosS = new Coordinate(pos.getX(), pos.getY()-1);
+                	grid.moveRobot(this, newPosS);
+                    break;
+                case WEST: 
+                	Coordinate newPosW = new Coordinate(pos.getX()+1, pos.getY());
+                	grid.moveRobot(this, newPosW);
+                    break; 
+            } 
 			break;
 		case RotateLeft: //Rotate robot left
 			this.rotate(RotationDirection.AntiClockwise);
@@ -45,7 +85,7 @@ public class Robot extends GridEntity {
                 case WEST: 
                 	this.heading = CompassDirection.EAST;
                     break; 
-            } 
+            }
 			break;
 		case Wait:
 			//Do nothing
@@ -95,7 +135,7 @@ public class Robot extends GridEntity {
 	public void destroy() {
 		//Set back to facing north and move back to starting position
 		this.heading = CompassDirection.NORTH;
-		//Grid.moveRobot(startingPosition);
+		grid.moveRobot(this, startingPosition);
 	}
 	
 	//Returns next flag number
@@ -116,15 +156,23 @@ public class Robot extends GridEntity {
 		return heading;
 	}
 	
+	public String getLetter() {
+		return this.letter;
+	}
+	
+	public void setLetter(String letter) {
+		this.letter = letter;
+	}
+	
 	@Override
 	public void act(Robot robot) {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 		
 	}
 
 	@Override
 	public void react(Robot robot) {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 		
 	}
 	

@@ -32,6 +32,7 @@ public class Grid {
 	public void addRobot(Robot robot) {
 		//Add robot to map
 		robots.put(robot, robot.getStartingPosition());
+		robot.setCurrentPosition(robot.getStartingPosition()); //update robots current position
 	}
 	
 	//Updates robot map with new coordinates
@@ -67,6 +68,7 @@ public class Grid {
 		}
 		//Add out of bounds check
 		robots.put(robot, newCoordinate); //Update position in map
+		robot.setCurrentPosition(newCoordinate);//Update robots own position
 	}
 	
 	//Get entity by its coordinates
