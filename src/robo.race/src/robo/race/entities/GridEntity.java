@@ -31,6 +31,10 @@ public abstract class GridEntity {
 	public Grid getGrid() {
 		return grid;
 	}
+	
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
 
 	public Coordinate getCurrentPosition() {
 		return currentPosition;
