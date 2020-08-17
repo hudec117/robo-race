@@ -2,7 +2,7 @@ package robo.race.entities;
 
 public class Pit extends GridEntity {
 	void act() {
-		Robot.destroy();
+		 throw new UnsupportedOperationException("Invalid operation");
 	}
 	
 	void react() {
