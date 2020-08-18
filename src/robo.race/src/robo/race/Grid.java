@@ -1,7 +1,12 @@
 package robo.race;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import robo.race.entities.CompassDirection;
 import robo.race.entities.GridEntity;
@@ -11,24 +16,26 @@ import robo.race.entities.StartingPosition;
 public class Grid {
 	GridEntity[][] entities;
 	Map<Robot, Coordinate> robots;
+	Queue<StartingPosition> startingPositions;
 	
 	//Constructor
 	public Grid (GridEntity[][] entities) {
 		this.entities = entities;
 		this.robots = new HashMap<Robot, Coordinate>();
 		linkEntitiesToGrid(); //Associates each entity with the grid
+		this.startingPositions = populateStartingPositions();
 	}
 	
-	private void populateStartingPositions() {
-		ArrayList<GridEntity> startingPositions = new ArrayList<GridEntity>();
+	private Queue<StartingPosition> populateStartingPositions() {
+		Queue<StartingPosition> startingPosQueue = new LinkedList<StartingPosition>();
 		for (GridEntity[] row : entities) {
 			for (GridEntity col : row) {
 				if(col instanceof StartingPosition) {
-					startingPositions.add(col);
+					startingPosQueue.add((StartingPosition) col);
 				}
 			}
 		}
-		//Sort starting positions
+		return startingPosQueue;
 	}
 	
 	private void linkEntitiesToGrid() {
@@ -61,6 +68,7 @@ public class Grid {
 	public void addRobot(Robot robot) {
 		//Add robot to map
 		robots.put(robot, robot.getStartingPosition());
+		robot.setLetter(startingPositions.poll().getLetter());
 		robot.setCurrentPosition(robot.getStartingPosition()); //update robots current position
 	}
 	
@@ -70,7 +78,7 @@ public class Grid {
 		for(Robot r : robots.keySet()) {
 			Coordinate oldPosition = robots.get(r);
 			//If new coordinates equal to a position where there is already a robot, move original robot
-			if(oldPosition.getX() == newCoordinate.getX() && oldPosition.getY() == newCoordinate.getY()) {
+			if(oldPosition.getX() == newCoordinate.getX() && oldPosition.getY() == newCoordinate.getY() && !(r.equals(robot))) {
 				//Determine which way robot is facing and move them that way 
 				CompassDirection direction = robot.getCompassDirection();
 				switch(direction) 
@@ -95,9 +103,18 @@ public class Grid {
 			}
 				
 		}
-		//Add out of bounds check
-		robots.put(robot, newCoordinate); //Update position in map
-		robot.setCurrentPosition(newCoordinate);//Update robots own position
+		
+		//Check in bounds
+		if ((newCoordinate.getX() >= 0 && newCoordinate.getX() < entities.length) &&
+		(newCoordinate.getY() >= 0 && newCoordinate.getY() < entities[newCoordinate.getX()].length)) {
+			robots.put(robot, newCoordinate); //Update position in map
+			robot.setCurrentPosition(newCoordinate);//Update robots own position
+		} else {
+			robot.destroy(); //Destroy robot if out of bounds
+			
+		}
+		
+		
 	}
 	
 	//Get entity by its coordinates
