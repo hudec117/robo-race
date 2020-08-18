@@ -3,11 +3,15 @@ package robo.race;
 public class Game {
 
 	public static void main(String[] args) {
-		// Ask for grid file
-		// Ask for program file
+		// Talha: Ask for grid file
+		// System.out.print() to print messages to user
+		// https://www.baeldung.com/java-console-input-output to read messages from user
+		// Talha: Ask for program file
 		
-		// Parse grid file
-		// Parse program file
+		// Talha: Parse grid file
+			// Instantiate parser class
+			// Use parser class to parse file inputted by user
+		// Talha: Parse program file
 		
 		// Loop until game not ended
 			// For 5 times
