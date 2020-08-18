@@ -30,7 +30,7 @@ public class Grid {
 		Queue<StartingPosition> startingPosQueue = new LinkedList<StartingPosition>();
 		for (GridEntity[] row : entities) {
 			for (GridEntity col : row) {
-				if(col instanceof StartingPosition) {
+				if(col instanceof StartingPosition) {		
 					startingPosQueue.add((StartingPosition) col);
 				}
 			}
@@ -51,6 +51,24 @@ public class Grid {
 	//Print out the grid
 	public void print() {
         String gridString = ""; //Stores the grid
+        for (int i=0; i < entities.length; i++) {
+        	for(int x=0; x < entities[i].length; x++) {
+        		//Check if robot st these coordinates
+        		Coordinate pos = new Coordinate(i, x);
+        		char letter = isRobotInPosition(pos);
+        		if(letter != 0) {
+        			gridString += letter;
+        		}
+        		else if(entities[i][x] == null) {
+                	gridString += ".";
+                } else {
+                	gridString += entities[i][x].toString();
+                }
+        	}
+        	gridString += "\n";
+        }
+        System.out.println(gridString);
+        /*
 		for (GridEntity[] row : entities) {
             for (GridEntity col : row) { //Loop through each row and add toString of entity
                 if(col == null) {
@@ -61,13 +79,14 @@ public class Grid {
             }
             gridString += "\n";
         }
-		System.out.println(gridString);
+		System.out.println(gridString);*/
 	}
 	
 	//Adds robot to the robots map with its coordinate
 	public void addRobot(Robot robot) {
 		//Add robot to map
 		robots.put(robot, robot.getStartingPosition());
+		entities[robot.getStartingPosition().getY()][robot.getStartingPosition().getX()] = null;
 		robot.setLetter(startingPositions.poll().getLetter());
 		robot.setCurrentPosition(robot.getStartingPosition()); //update robots current position
 	}
@@ -138,6 +157,15 @@ public class Grid {
 			}
 			
 		}
+	}
+	
+	public char isRobotInPosition(Coordinate pos) {
+		for(Robot r : robots.keySet()) {
+			if(robots.get(r).equals(pos)) {
+				return r.getLetter();
+			}
+		}
+		return 0;
 	}
 	
 	public Map<Robot, Coordinate> getRobots(){
