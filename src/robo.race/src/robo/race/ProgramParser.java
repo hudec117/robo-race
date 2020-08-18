@@ -12,7 +12,7 @@ import java.util.Scanner;
 //********************************************************
 public class ProgramParser {
 	
-	public static ArrayList<Program> parse(String filePath) throws FileNotFoundException {
+	public ArrayList<Program> parse(String filePath) throws FileNotFoundException, ProgramParserException {
 		//Used to store names and instructions from file
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> instructions = new ArrayList<String>();
@@ -24,8 +24,8 @@ public class ProgramParser {
 	    while (sc.hasNextLine()) {
 	      String line = sc.nextLine();
 	      lineCount++;
-	      //If lineCount = 1, get names
-	      if (lineCount == 1) {
+	      //If lineCount = 2, get names (line1 is "format1", line2 contains names)
+	      if (lineCount == 2) {
 	    	  String[] lineSplitted = line.split(" ");
 		      for(String name : lineSplitted) {
 		    	  names.add(name);
@@ -50,7 +50,14 @@ public class ProgramParser {
 	    	//Add enums to a queue
 	    	Queue<RobotInstruction> instructionQueue = new LinkedList<RobotInstruction>();
 	    	for (int i = 0; i < instruction.length(); i++){
-	    	    char c = instruction.charAt(i);        
+	    	    char c = instruction.charAt(i); 
+	    	    if(i > 0) {
+	    	    	char prevC = instruction.charAt(i-1);
+		    	    if (c == prevC) {
+		    	    	throw new ProgramParserException("Robot cannot perform the same move twice in a row.");
+		    	    }
+	    	    }
+	    	    
 	    	    switch(c) 
 	            { 
 	                case 'F': 

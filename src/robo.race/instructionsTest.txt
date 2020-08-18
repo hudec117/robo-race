@@ -1,3 +1,4 @@
-Alice Bob
-FLFWF WFWFL
-RFWFL FRWRF
+format1
+.....
+.A...
+...x.
