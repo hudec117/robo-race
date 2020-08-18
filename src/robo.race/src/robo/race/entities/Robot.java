@@ -9,11 +9,12 @@ public class Robot extends GridEntity {
 	Grid grid;
 	CompassDirection heading = CompassDirection.NORTH;
 	int nextFlagNum = 1;
-	String letter;
+	char letter;
 	
 	//Constructor
 	public Robot(Grid grid, Coordinate startingPosition) {
 		this.startingPosition = startingPosition;
+		this.setCurrentPosition(startingPosition);
 		this.grid  = grid;
 	}
 	
@@ -26,19 +27,19 @@ public class Robot extends GridEntity {
 			switch(heading) //Check which way robot is facing before moving forward
             { 
                 case NORTH: 
-                	Coordinate newPosN = new Coordinate(pos.getX(), pos.getY()-1);
+                	Coordinate newPosN = new Coordinate(pos.getX()-1, pos.getY());
                 	grid.moveRobot(this, newPosN);
                     break; 
                 case EAST: 
-                	Coordinate newPosE = new Coordinate(pos.getX()+1, pos.getY());
+                	Coordinate newPosE = new Coordinate(pos.getX(), pos.getY()+1);
                 	grid.moveRobot(this, newPosE);
                     break; 
                 case SOUTH: 
-                	Coordinate newPosS = new Coordinate(pos.getX(), pos.getY()+1);
+                	Coordinate newPosS = new Coordinate(pos.getX()+1, pos.getY());
                 	grid.moveRobot(this, newPosS);
                     break;
                 case WEST: 
-                	Coordinate newPosW = new Coordinate(pos.getX()-1, pos.getY());
+                	Coordinate newPosW = new Coordinate(pos.getX(), pos.getY()-1);
                 	grid.moveRobot(this, newPosW);
                     break; 
             } 
@@ -47,19 +48,19 @@ public class Robot extends GridEntity {
 			switch(heading) //Check which way robot is facing before moving backwards
             { 
                 case NORTH: 
-                	Coordinate newPosN = new Coordinate(pos.getX(), pos.getY()+1);
+                	Coordinate newPosN = new Coordinate(pos.getX()+1, pos.getY());
                 	grid.moveRobot(this, newPosN);
                     break; 
                 case EAST: 
-                	Coordinate newPosE = new Coordinate(pos.getX()-1, pos.getY());
+                	Coordinate newPosE = new Coordinate(pos.getX(), pos.getY()-1);
                 	grid.moveRobot(this, newPosE);
                     break; 
                 case SOUTH: 
-                	Coordinate newPosS = new Coordinate(pos.getX(), pos.getY()-1);
+                	Coordinate newPosS = new Coordinate(pos.getX()-1, pos.getY());
                 	grid.moveRobot(this, newPosS);
                     break;
                 case WEST: 
-                	Coordinate newPosW = new Coordinate(pos.getX()+1, pos.getY());
+                	Coordinate newPosW = new Coordinate(pos.getX(), pos.getY()+1);
                 	grid.moveRobot(this, newPosW);
                     break; 
             } 
@@ -136,6 +137,7 @@ public class Robot extends GridEntity {
 		//Set back to facing north and move back to starting position
 		this.heading = CompassDirection.NORTH;
 		grid.moveRobot(this, startingPosition);
+		
 	}
 	
 	//Returns next flag number
@@ -156,11 +158,11 @@ public class Robot extends GridEntity {
 		return heading;
 	}
 	
-	public String getLetter() {
+	public char getLetter() {
 		return this.letter;
 	}
 	
-	public void setLetter(String letter) {
+	public void setLetter(char letter) {
 		this.letter = letter;
 	}
 	

@@ -1,6 +1,6 @@
 package robo.race.entities;
 
-public class StartingPosition extends GridEntity {
+public class StartingPosition extends GridEntity{
 	private char letter;
 	
 	public StartingPosition(char letter) {
@@ -20,4 +20,5 @@ public class StartingPosition extends GridEntity {
 	public void react(Robot robot) {
 		throw new UnsupportedOperationException("Invalid operation");
 	}
+
 }
