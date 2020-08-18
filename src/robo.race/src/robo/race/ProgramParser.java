@@ -30,10 +30,13 @@ public class ProgramParser {
 		      for(String name : lineSplitted) {
 		    	  names.add(name);
 		      }
-	      } else { //Else get instructions
+	      } else if (lineCount > 2){ //Else get instructions
 	    	  String[] lineSplitted = line.split(" ");
 		      for(int i = 0; i < names.size(); i++) {
 		    	  if(i < instructions.size()) {
+		    		  if(lineSplitted[i].length() != 5) {
+			    		  throw new ProgramParserException("Instructions must be setup in blocks of 5.");
+			    	  }
 		    		  String updatedInstruction = instructions.get(i) + lineSplitted[i];
 		    		  instructions.set(i, updatedInstruction);
 		    	  } else {
