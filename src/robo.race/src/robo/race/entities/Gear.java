@@ -20,4 +20,14 @@ public class Gear extends GridEntity {
 	public void react(Robot robot) {
 		throw new UnsupportedOperationException();
 	}
+	
+	@Override
+	public String toString() {
+		if(rotationDirection == RotationDirection.Clockwise) {
+			return "+";
+		}
+		else{
+			return "-";
+		}
+	}
 }
