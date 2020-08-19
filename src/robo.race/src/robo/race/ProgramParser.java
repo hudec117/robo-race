@@ -92,13 +92,14 @@ public class ProgramParser {
 	    }
 	    
 	    //Create a program using player name and instructions
-	    ArrayList<Program> programs = new ArrayList<Program>();
+	    List<Program> programs = new ArrayList<Program>();
 	    for(int i = 0; i < names.size(); i++) {
 	    	Program program = new Program(names.get(i), robotInstructions.get(i));
 	    	programs.add(program);
 	    }
+	    
 	    //Return array of all programs
-	    return programs;
+	    return new LinkedList<Program>(programs);
 	}
 
 }

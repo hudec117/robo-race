@@ -1,9 +1,6 @@
 package robo.race.entities;
 
 public class Pit extends GridEntity {
-	void act() {
-		 throw new UnsupportedOperationException("Invalid operation");
-	}
 	
 	public void react(Robot robot) {
 		robot.destroy();
@@ -11,13 +8,13 @@ public class Pit extends GridEntity {
 
 	@Override
 	public void act(Robot robot) {
-		// TODO Auto-generated method stub
+		 throw new UnsupportedOperationException();
 		
 	}
 	
 	@Override
 	public String toString() {
-		return "X";
+		return "x";
 		
 	}
 

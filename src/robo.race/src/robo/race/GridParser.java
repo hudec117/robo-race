@@ -14,7 +14,6 @@ import robo.race.entities.StartingPosition;
 
 public class GridParser {
 	public Grid parse(String filePath) throws FileNotFoundException, GridParserException {
-		
 		File file = new File(filePath);
 		Scanner sc = new Scanner(file);
 		
@@ -24,8 +23,8 @@ public class GridParser {
 			int lineCount = 0;
 			int previousRowWidth = 0;
 			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
 				if (lineCount > 0) {
-					String line = sc.nextLine();
 					char[] rawEntities = line.toCharArray();
 					
 					if (lineCount > 1 && previousRowWidth != rawEntities.length) {
@@ -36,7 +35,7 @@ public class GridParser {
 					
 					GridEntity[] entities = new GridEntity[rawEntities.length];
 					
-					for (int i = 0; i < rawEntities.length;) {
+					for (int i = 0; i < rawEntities.length; i++) {
 						char rawEntity = rawEntities[i];
 						GridEntity entityToAdd = null;
 						
@@ -62,7 +61,10 @@ public class GridParser {
 							entityToAdd = new StartingPosition(rawEntity);
 						}
 						
-						entities[i] = entityToAdd;
+						if (entityToAdd != null) {
+							entityToAdd.setCurrentPosition(new Coordinate(i, lineCount - 1));
+							entities[i] = entityToAdd;
+						}
 					}
 					
 					allEntities.add(entities);
@@ -74,6 +76,6 @@ public class GridParser {
 			sc.close();
 		}
 		
-		return new Grid((GridEntity[][])allEntities.toArray());
+		return new Grid((GridEntity[][])allEntities.toArray(new GridEntity[][] { }));
 	}
 }

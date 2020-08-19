@@ -1,6 +1,8 @@
 package robo.race;
 
 import java.util.Queue;
+
+import robo.race.entities.Robot;
 //********************************************************
 //  Name: Program
 //  Description: Stores a players name and the instructions
@@ -8,6 +10,7 @@ import java.util.Queue;
 //********************************************************
 public class Program {
 	String playerName;
+	Robot robot;
 	Queue<RobotInstruction> instructions;
 	 
 	public Program(String playerName, Queue<RobotInstruction> instructions) {
@@ -20,6 +23,14 @@ public class Program {
 		return playerName;
 	}
 	
+	public Robot getRobot() {
+		return robot;
+	}
+
+	public void setRobot(Robot robot) {
+		this.robot = robot;
+	}
+
 	//Return instructions
 	public Queue<RobotInstruction> getInstructions() {
 		return instructions;
