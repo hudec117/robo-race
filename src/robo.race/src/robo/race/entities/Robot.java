@@ -10,6 +10,7 @@ public class Robot extends GridEntity {
 	CompassDirection heading = CompassDirection.NORTH;
 	int nextFlagNum = 1;
 	char letter;
+	RobotInstruction previousInstruction;
 	
 	//Constructor
 	public Robot(Grid grid, Coordinate startingPosition) {
@@ -24,6 +25,7 @@ public class Robot extends GridEntity {
 		switch(instruction)
 		{
 		case Forward: //Move Robot forward
+			this.previousInstruction = RobotInstruction.Forward;
 			switch(heading) //Check which way robot is facing before moving forward
             { 
                 case NORTH: 
@@ -45,6 +47,7 @@ public class Robot extends GridEntity {
             } 
 			break;
 		case Backward: //Move Robot backwards
+			this.previousInstruction = RobotInstruction.Backward;
 			switch(heading) //Check which way robot is facing before moving backwards
             { 
                 case NORTH: 
@@ -136,7 +139,30 @@ public class Robot extends GridEntity {
 	public void destroy() {
 		//Set back to facing north and move back to starting position
 		this.heading = CompassDirection.NORTH;
-		grid.moveRobot(this, startingPosition);
+		//Check if starting position is occupied, if so try NESW positions
+		if(grid.isRobotInPosition(startingPosition) != 0) {
+			Coordinate posN = new Coordinate(startingPosition.getX()-1, startingPosition.getY());
+			Coordinate posE = new Coordinate(startingPosition.getX(), startingPosition.getY()+1);
+			Coordinate posS = new Coordinate(startingPosition.getX()+1, startingPosition.getY());
+			Coordinate posW = new Coordinate(startingPosition.getX(), startingPosition.getY()-1);
+			if(grid.checkIfOutOfBounds(posN) == false && grid.isRobotInPosition(posN) == 0) {
+				grid.addToRobotsArray(this, posN);
+				grid.moveRobot(this, posN);
+			} else if(grid.checkIfOutOfBounds(posE) == false && grid.isRobotInPosition(posE) == 0) {
+				grid.addToRobotsArray(this, posE);
+				grid.moveRobot(this, posE);
+			} else if(grid.checkIfOutOfBounds(posS) == false && grid.isRobotInPosition(posS) == 0) {
+				grid.addToRobotsArray(this, posS);
+				grid.moveRobot(this, posS);
+			} else if(grid.checkIfOutOfBounds(posW) == false && grid.isRobotInPosition(posW) == 0) {
+				grid.addToRobotsArray(this, posW);
+				grid.moveRobot(this, posW);
+			}
+		} else { //If starting position not occupied, move robot there
+			grid.addToRobotsArray(this, startingPosition);
+			grid.moveRobot(this, startingPosition);
+		}
+		
 		
 	}
 	
@@ -164,6 +190,10 @@ public class Robot extends GridEntity {
 	
 	public void setLetter(char letter) {
 		this.letter = letter;
+	}
+	
+	public RobotInstruction getPreviousInstruction() {
+		return this.previousInstruction;
 	}
 	
 	@Override
