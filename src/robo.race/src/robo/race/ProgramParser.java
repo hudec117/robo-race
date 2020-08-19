@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 //********************************************************
@@ -12,7 +13,7 @@ import java.util.Scanner;
 //********************************************************
 public class ProgramParser {
 	
-	public ArrayList<Program> parse(String filePath) throws FileNotFoundException, ProgramParserException {
+	public Queue<Program> parse(String filePath) throws FileNotFoundException, ProgramParserException {
 		//Used to store names and instructions from file
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> instructions = new ArrayList<String>();
@@ -91,13 +92,14 @@ public class ProgramParser {
 	    }
 	    
 	    //Create a program using player name and instructions
-	    ArrayList<Program> programs = new ArrayList<Program>();
+	    List<Program> programs = new ArrayList<Program>();
 	    for(int i = 0; i < names.size(); i++) {
 	    	Program program = new Program(names.get(i), robotInstructions.get(i));
 	    	programs.add(program);
 	    }
+	    
 	    //Return array of all programs
-	    return programs;
+	    return new LinkedList<Program>(programs);
 	}
 
 }
