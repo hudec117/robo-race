@@ -57,7 +57,7 @@ public class ProgramParser {
 	    	    char c = instruction.charAt(i); 
 	    	    if(i > 0) {
 	    	    	char prevC = instruction.charAt(i-1);
-		    	    if (c == prevC) {
+		    	    if (c == prevC && i%5 != 0) {
 		    	    	throw new ProgramParserException("Robot cannot perform the same move twice in a row.");
 		    	    }
 	    	    }
