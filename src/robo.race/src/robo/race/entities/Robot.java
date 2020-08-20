@@ -29,19 +29,19 @@ public class Robot extends GridEntity {
 			switch(heading) //Check which way robot is facing before moving forward
             { 
                 case NORTH: 
-                	Coordinate newPosN = new Coordinate(pos.getX()-1, pos.getY());
+                	Coordinate newPosN = new Coordinate(pos.getY()-1, pos.getX());
                 	grid.moveRobot(this, newPosN);
                     break; 
                 case EAST: 
-                	Coordinate newPosE = new Coordinate(pos.getX(), pos.getY()+1);
+                	Coordinate newPosE = new Coordinate(pos.getY(), pos.getX()+1);
                 	grid.moveRobot(this, newPosE);
                     break; 
                 case SOUTH: 
-                	Coordinate newPosS = new Coordinate(pos.getX()+1, pos.getY());
+                	Coordinate newPosS = new Coordinate(pos.getY()+1, pos.getX());
                 	grid.moveRobot(this, newPosS);
                     break;
                 case WEST: 
-                	Coordinate newPosW = new Coordinate(pos.getX(), pos.getY()-1);
+                	Coordinate newPosW = new Coordinate(pos.getY(), pos.getX()-1);
                 	grid.moveRobot(this, newPosW);
                     break; 
             } 
@@ -51,19 +51,19 @@ public class Robot extends GridEntity {
 			switch(heading) //Check which way robot is facing before moving backwards
             { 
                 case NORTH: 
-                	Coordinate newPosN = new Coordinate(pos.getX()+1, pos.getY());
+                	Coordinate newPosN = new Coordinate(pos.getY()+1, pos.getX());
                 	grid.moveRobot(this, newPosN);
                     break; 
                 case EAST: 
-                	Coordinate newPosE = new Coordinate(pos.getX(), pos.getY()-1);
+                	Coordinate newPosE = new Coordinate(pos.getY(), pos.getX()-1);
                 	grid.moveRobot(this, newPosE);
                     break; 
                 case SOUTH: 
-                	Coordinate newPosS = new Coordinate(pos.getX()-1, pos.getY());
+                	Coordinate newPosS = new Coordinate(pos.getY()-1, pos.getX());
                 	grid.moveRobot(this, newPosS);
                     break;
                 case WEST: 
-                	Coordinate newPosW = new Coordinate(pos.getX(), pos.getY()+1);
+                	Coordinate newPosW = new Coordinate(pos.getY(), pos.getX()+1);
                 	grid.moveRobot(this, newPosW);
                     break; 
             } 

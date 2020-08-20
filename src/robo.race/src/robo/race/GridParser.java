@@ -62,7 +62,7 @@ public class GridParser {
 						}
 						
 						if (entityToAdd != null) {
-							entityToAdd.setCurrentPosition(new Coordinate(lineCount - 1, i));
+							entityToAdd.setCurrentPosition(new Coordinate(i, lineCount - 1));
 							entities[i] = entityToAdd;
 						}
 					}
