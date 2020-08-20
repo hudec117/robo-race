@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Queue;
 
 import robo.race.entities.CompassDirection;
+import robo.race.entities.Flag;
+import robo.race.entities.Gear;
 import robo.race.entities.GridEntity;
+import robo.race.entities.Pit;
 import robo.race.entities.Robot;
 import robo.race.entities.StartingPosition;
 
@@ -59,7 +62,7 @@ public class Grid {
         		if(letter != 0) {
         			gridString += letter;
         		}
-        		else if(entities[i][x] == null) {
+        		else if(entities[i][x] == null || entities[i][x] instanceof StartingPosition) {
                 	gridString += ".";
                 } else {
                 	gridString += entities[i][x].toString();
@@ -68,31 +71,33 @@ public class Grid {
         	gridString += "\n";
         }
         System.out.println(gridString);
-        /*
-		for (GridEntity[] row : entities) {
-            for (GridEntity col : row) { //Loop through each row and add toString of entity
-                if(col == null) {
-                	gridString += ".";
-                } else {
-                	gridString += col.toString();
-                }
-            }
-            gridString += "\n";
-        }
-		System.out.println(gridString);*/
 	}
 	
 	//Adds robot to the robots map with its coordinate
-	public void addRobot(Robot robot) {
-		//Add robot to map
-		robots.put(robot, robot.getStartingPosition());
-		entities[robot.getStartingPosition().getY()][robot.getStartingPosition().getX()] = null;
-		robot.setLetter(startingPositions.poll().getLetter());
-		robot.setCurrentPosition(robot.getStartingPosition()); //update robots current position
-	}
+		public Robot addRobot() {
+			//Add robot to map
+			StartingPosition pos = this.startingPositions.poll(); //gets a starting pos from queue
+			Robot robot = new Robot(this, pos.getCurrentPosition()); //Creates new robot
+			robot.setLetter(pos.getLetter());
+			robots.put(robot, robot.getStartingPosition()); //Adds robot to map
+			entities[robot.getStartingPosition().getY()][robot.getStartingPosition().getX()] = null;
+			return robot;
+		}
 	
 	//Updates robot map with new coordinates
 	public void moveRobot(Robot robot, Coordinate newCoordinate) {
+		//Check in bounds
+		if(checkIfOutOfBounds(newCoordinate) == false) {
+			robots.put(robot, newCoordinate); //Update position in map
+			robot.setCurrentPosition(newCoordinate);//Update robots own position
+			//Check if on flag or pit
+			if(getEntity(robot.getCurrentPosition()) instanceof Pit || getEntity(robot.getCurrentPosition()) instanceof Flag) {
+				getEntity(robot.getCurrentPosition()).react(robot);
+			}
+		} else {
+			robots.remove(robot);
+			robot.destroy(); //Destroy robot if out of bounds
+		}
 		//Check if robot already in new position
 		for(Robot r : robots.keySet()) {
 			Coordinate oldPosition = robots.get(r);
@@ -102,38 +107,99 @@ public class Grid {
 				CompassDirection direction = robot.getCompassDirection();
 				switch(direction) 
 				{ 
-	                case NORTH: 
-	                	Coordinate coordinateN = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
-	                	moveRobot(r, coordinateN);
+	                case NORTH:
+	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
+	                		Coordinate coordinateN = new Coordinate(oldPosition.getX()-1, oldPosition.getY());
+	                		if(checkIfOutOfBounds(coordinateN) == false) {
+		                		moveRobot(r, coordinateN);
+		                		robots.put(r, coordinateN);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
+	                		Coordinate coordinateN = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
+	                		if(checkIfOutOfBounds(coordinateN) == false) {
+		                		moveRobot(r, coordinateN);
+		                		robots.put(r, coordinateN);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	}
 	                    break; 
-	                case EAST: 
-	                	Coordinate coordinateE = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
-	                	moveRobot(r, coordinateE);
+	                case EAST:
+	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
+		                	Coordinate coordinateE = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
+		                	if(checkIfOutOfBounds(coordinateE) == false) {
+		                		robots.put(r, coordinateE);
+			                	moveRobot(r, coordinateE);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
+		                	Coordinate coordinateE = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
+		                	if(checkIfOutOfBounds(coordinateE) == false) {
+		                		robots.put(r, coordinateE);
+			                	moveRobot(r, coordinateE);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	}
 	                    break; 
-	                case SOUTH: 
-	                	Coordinate coordinateS = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
-	                	moveRobot(r, coordinateS);
+	                case SOUTH:
+	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
+		                	Coordinate coordinateS = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
+		                	if(checkIfOutOfBounds(coordinateS) == false) {
+		                		robots.put(r, coordinateS);
+			                	moveRobot(r, coordinateS);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	} else if (robot.getPreviousInstruction() == RobotInstruction.Backward) {
+		                	Coordinate coordinateS = new Coordinate(oldPosition.getX()-1, oldPosition.getY());
+		                	if(checkIfOutOfBounds(coordinateS) == false) {
+		                		robots.put(r, coordinateS);
+			                	moveRobot(r, coordinateS);
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	}
 	                    break;
 	                case WEST: 
-	                	Coordinate coordinateW = new Coordinate(oldPosition.getX()-1, oldPosition.getY());
-	                	moveRobot(r, coordinateW);
+	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
+		                	Coordinate coordinateW = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
+		                	if(checkIfOutOfBounds(coordinateW) == false) {
+		                		robots.put(r, coordinateW);
+			                	moveRobot(r, coordinateW);	
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
+		                	Coordinate coordinateW = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
+		                	if(checkIfOutOfBounds(coordinateW) == false) {
+		                		robots.put(r, coordinateW);
+			                	moveRobot(r, coordinateW);	
+		                	} else {
+		                		r.destroy();
+		                	}
+	                	}
 	                    break; 
 	            } 
 			}
 				
 		}
 		
-		//Check in bounds
-		if ((newCoordinate.getX() >= 0 && newCoordinate.getX() < entities.length) &&
-		(newCoordinate.getY() >= 0 && newCoordinate.getY() < entities[newCoordinate.getX()].length)) {
-			robots.put(robot, newCoordinate); //Update position in map
-			robot.setCurrentPosition(newCoordinate);//Update robots own position
+		
+		
+		
+	}
+	
+	public boolean checkIfOutOfBounds(Coordinate pos) {
+		if ((pos.getX() >= 0 && pos.getX() < entities.length) &&
+				(pos.getY() >= 0 && pos.getY() < entities[pos.getX()].length)) {
+			return false;
 		} else {
-			robot.destroy(); //Destroy robot if out of bounds
-			
+			return true;
 		}
-		
-		
 	}
 	
 	//Get entity by its coordinates
@@ -149,6 +215,22 @@ public class Grid {
 	
 	//Activate entities that robots are on
 	public void activate() {
+        for (int i=0; i < entities.length; i++) {
+        	for(int x=0; x < entities[i].length; x++) {
+        		Coordinate pos = new Coordinate(i, x);
+        		char letter = isRobotInPosition(pos);
+        		if(letter != 0) {
+        			GridEntity entity = getEntity(pos);
+        			 if (entity instanceof Gear) {
+        				 for (Robot r : robots.keySet()) {
+        					 if (r.getCurrentPosition() == pos) {
+        						 entity.act(r);
+        					 }
+        				 }
+        			 }
+        		}
+        	}
+        }
 		for (Robot robot : robots.keySet()) {
 			Coordinate position = robots.get(robot);
 			GridEntity entity = this.getEntity(position);
@@ -171,5 +253,35 @@ public class Grid {
 	public Map<Robot, Coordinate> getRobots(){
 		return robots;
 	}
+	
+	public void addToRobotsArray(Robot r, Coordinate pos) {
+		this.robots.put(r, pos);
+	}
+	
+	public int getLastFlagNumber() {
+		ArrayList<Integer> flagNumbers = new ArrayList<Integer>();
+		for (GridEntity[] row : entities) {
+			for (GridEntity col : row) {
+				if(col instanceof Flag) {		
+					flagNumbers.add(((Flag) col).getNumber());
+				}
+			}
+		}
+		Collections.sort(flagNumbers);
+		if (flagNumbers.size() > 0) {
+			return flagNumbers.get(flagNumbers.size() - 1);
+		} else {
+			return 0;
+		}
+	}
+	
+	public boolean canAddRobot() {
+		if(robots.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 }
