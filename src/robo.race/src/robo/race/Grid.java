@@ -223,7 +223,7 @@ public class Grid {
         			GridEntity entity = getEntity(pos);
         			 if (entity instanceof Gear) {
         				 for (Robot r : robots.keySet()) {
-        					 if (r.getCurrentPosition() == pos) {
+        					 if (r.getCurrentPosition().equals(pos)) {
         						 entity.act(r);
         					 }
         				 }
@@ -231,14 +231,6 @@ public class Grid {
         		}
         	}
         }
-		for (Robot robot : robots.keySet()) {
-			Coordinate position = robots.get(robot);
-			GridEntity entity = this.getEntity(position);
-			if(entity != null) {
-				entity.act(robot);
-			}
-			
-		}
 	}
 	
 	public char isRobotInPosition(Coordinate pos) {
