@@ -1,9 +1,6 @@
 package robo.race;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -52,20 +49,26 @@ public class Game {
 				program.setRobot(robot);
 			}
 			
-			// TODO: what if ran out of instructions?
-			
 			boolean gameFinished = false;
 			int round = 1;
 			while (!gameFinished) {
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 5 && !gameFinished; i++) {
+					System.out.println("Round " + round + ", action " + (i + 1));
+					
 					// Execute one instruction from each program
 					for (Program program : programs) {
 						// Execution one instruction
 						Queue<RobotInstruction> instructions = program.getInstructions();
-						RobotInstruction instruction = instructions.remove();
-						
-						Robot robot = program.getRobot();
-						robot.perform(instruction);
+						RobotInstruction instruction = instructions.poll();
+						if (instruction == null) {
+							System.out.println("Out of instructions!");
+							gameFinished = true;
+							break;
+						} else {
+							Robot robot = program.getRobot();
+							robot.perform(instruction);
+							System.out.println("Robot " + robot.getLetter() + " performed " + instruction.toString());
+						}
 					}
 					
 					// Move first program to back of queue
@@ -76,24 +79,27 @@ public class Game {
 					grid.activate();
 					
 					// Print board
-					System.out.print("Round " + round + ", action " + (i + 1));
 					grid.print();
-				}
-				
-				// Check all robot's current flag number for win condition
-				for (Program program : programs) {
-					Robot robot = program.getRobot();
-					if (robot.getNextFlagNumber() == grid.getLastFlagNumber()) {
-						gameFinished = true;
-						// TODO: get information on robot that won
+					
+					// Check all robot's current flag number for win condition
+					for (Program program : programs) {
+						Robot robot = program.getRobot();
+						if (robot.getLastFlagNumber() == grid.getLastFlagNumber()) {
+							System.out.println("Robot " + robot.getLetter() + " wins!");
+							System.out.println("GAME OVER");
+							
+							gameFinished = true;
+						}
 					}
 				}
 				
-				// Ask user if want to continue (if not won)
-				System.out.println("Press ENTER to continue");
-				scanner.nextLine();
-				
-				round++;
+				if (gameFinished == false) {
+					// Ask user if want to continue (if not won)
+					System.out.println("Press ENTER to continue");
+					scanner.nextLine();
+					
+					round++;
+				}
 			}
 		}
 	}

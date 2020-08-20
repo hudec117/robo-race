@@ -54,18 +54,18 @@ public class Grid {
 	//Print out the grid
 	public void print() {
         String gridString = ""; //Stores the grid
-        for (int i=0; i < entities.length; i++) {
-        	for(int x=0; x < entities[i].length; x++) {
+        for (int y = 0; y < entities.length; y++) {
+        	for(int x = 0; x < entities[y].length; x++) {
         		//Check if robot st these coordinates
-        		Coordinate pos = new Coordinate(i, x);
+        		Coordinate pos = new Coordinate(y, x);
         		char letter = isRobotInPosition(pos);
         		if(letter != 0) {
         			gridString += letter;
         		}
-        		else if(entities[i][x] == null || entities[i][x] instanceof StartingPosition) {
+        		else if(entities[y][x] == null || entities[y][x] instanceof StartingPosition) {
                 	gridString += ".";
                 } else {
-                	gridString += entities[i][x].toString();
+                	gridString += entities[y][x].toString();
                 }
         	}
         	gridString += "\n";
@@ -80,7 +80,7 @@ public class Grid {
 			Robot robot = new Robot(this, pos.getCurrentPosition()); //Creates new robot
 			robot.setLetter(pos.getLetter());
 			robots.put(robot, robot.getStartingPosition()); //Adds robot to map
-			entities[robot.getStartingPosition().getY()][robot.getStartingPosition().getX()] = null;
+			entities[robot.getStartingPosition().getX()][robot.getStartingPosition().getY()] = null;
 			return robot;
 		}
 	
@@ -210,7 +210,6 @@ public class Grid {
 		} else {
 			return null; //No entity at this position
 		}
-		 
 	}
 	
 	//Activate entities that robots are on

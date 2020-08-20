@@ -18,8 +18,8 @@ public class Flag extends GridEntity {
 
 	@Override
 	public void react(Robot robot) {
-		if (robot.getNextFlagNumber() == number) {
-			robot.setNextFlagNumber(number + 1);
+		if (robot.getLastFlagNumber() + 1 == number) {
+			robot.setLastFlagNumber(number);
 		}
 	}
 	
