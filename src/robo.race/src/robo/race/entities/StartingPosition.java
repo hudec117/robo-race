@@ -1,5 +1,10 @@
 package robo.race.entities;
 
+//********************************************************
+// Name: 		StartingPosition
+// Description: Represents a starting location on the Grid, this is removed from the Grid when robot's are added.
+// Author: 		Aurel Hudec
+//********************************************************
 public class StartingPosition extends GridEntity{
 	private char letter;
 	

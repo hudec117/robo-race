@@ -62,6 +62,8 @@ public class Game {
 						// Execution one instruction
 						Queue<RobotInstruction> instructions = program.getInstructions();
 						RobotInstruction instruction = instructions.poll();
+						
+						// .poll() will return null if there is nothing else left to dequeue, this means we've run out of instructions.
 						if (instruction == null) {
 							System.out.println("Out of instructions!");
 							System.out.println("GAME OVER");
