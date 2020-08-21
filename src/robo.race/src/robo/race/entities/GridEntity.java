@@ -3,6 +3,11 @@ package robo.race.entities;
 import robo.race.Coordinate;
 import robo.race.Grid;
 
+//********************************************************
+// Name: 		GridEntity
+// Description: An abstract class to represent any entities that will be on a Grid.
+// Author: 		Aurel Hudec
+//********************************************************
 public abstract class GridEntity {
 	private Grid grid = null;
 	private Coordinate currentPosition;
