@@ -13,7 +13,7 @@ public class Robot extends GridEntity {
 	Coordinate previousPosition;
 	Grid grid;
 	CompassDirection heading = CompassDirection.NORTH;
-	int lastFlagNum = 0;
+	int lastFlagNum = 0; //Stores the current flag number they have obtained
 	char letter;
 	RobotInstruction previousInstruction;
 	
@@ -28,7 +28,7 @@ public class Robot extends GridEntity {
 	//Perform instruction
 	public void perform(RobotInstruction instruction) {
 		Coordinate pos = this.getCurrentPosition();
-		this.previousPosition = pos;
+		this.previousPosition = pos; //Save the previous position
 		switch(instruction)
 		{
 		case Forward: //Move Robot forward
@@ -182,26 +182,32 @@ public class Robot extends GridEntity {
 		this.lastFlagNum = lastFlagNum;
 	}
 	
+	//Returns the starting position
 	public Coordinate getStartingPosition() {
 		return this.startingPosition;
 	}
 	
+	//Returns the compass direction
 	public CompassDirection getCompassDirection() {
 		return heading;
 	}
 	
+	//Returns the letter
 	public char getLetter() {
 		return this.letter;
 	}
 	
+	//Sets the letter
 	public void setLetter(char letter) {
 		this.letter = letter;
 	}
 	
+	//Returns the previous instruction of the robot
 	public RobotInstruction getPreviousInstruction() {
 		return this.previousInstruction;
 	}
 	
+	//Returns the previous position of the robot
 	public Coordinate getPreviousPosition() {
 		return this.previousPosition;
 	}
