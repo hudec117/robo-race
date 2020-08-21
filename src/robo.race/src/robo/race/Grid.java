@@ -30,9 +30,10 @@ public class Grid {
 		this.entities = entities;
 		this.robots = new HashMap<Robot, Coordinate>();
 		linkEntitiesToGrid(); //Associates each entity with the grid
-		this.startingPositions = populateStartingPositions();
+		this.startingPositions = populateStartingPositions(); //Populate starting positions
 	}
 	
+	//Sorts starting positions from grid and returns an ordered queue
 	private Queue<StartingPosition> populateStartingPositions() {
 		Queue<StartingPosition> startingPosQueue = new LinkedList<StartingPosition>();
 		ArrayList<StartingPosition> spList = new ArrayList<StartingPosition>();
@@ -40,7 +41,6 @@ public class Grid {
 			for (GridEntity col : row) {
 				if(col instanceof StartingPosition) {	
 					spList.add((StartingPosition) col);
-					//startingPosQueue.add((StartingPosition) col);
 				}
 			}
 		}
@@ -66,6 +66,7 @@ public class Grid {
 		return startingPosQueue;
 	}
 	
+	//Loops through grid and associates each entity with this grid
 	private void linkEntitiesToGrid() {
 		for (GridEntity[] row : entities) {
 			for (GridEntity col : row) {
@@ -81,21 +82,21 @@ public class Grid {
         String gridString = ""; //Stores the grid
         for (int y = 0; y < entities.length; y++) {
         	for(int x = 0; x < entities[y].length; x++) {
-        		//Check if robot st these coordinates
+        		//Check if robot at these coordinates
         		Coordinate pos = new Coordinate(y, x);
         		char letter = isRobotInPosition(pos);
         		if(letter != 0) {
-        			gridString += letter;
+        			gridString += letter; //Print letter of the robot instead of Entity
         		}
         		else if(entities[y][x] == null || entities[y][x] instanceof StartingPosition) {
-                	gridString += ".";
+                	gridString += "."; //Print . instead of StartingPositions
                 } else {
                 	gridString += entities[y][x].toString();
                 }
         	}
         	gridString += "\n";
         }
-        System.out.println(gridString);
+        System.out.println(gridString); //print grid
 	}
 	
 	//Adds robot to the robots map with its coordinate
@@ -181,6 +182,7 @@ public class Grid {
 		}
 	}
 	
+	//Check if position given is within the grid boundaries
 	public boolean checkIfOutOfBounds(Coordinate pos) {
 		if ((pos.getX() >= 0 && pos.getX() < entities.length) &&
 				(pos.getY() >= 0 && pos.getY() < entities[pos.getX()].length)) {
@@ -220,6 +222,7 @@ public class Grid {
         }
 	}
 	
+	//Check if there is a robot in the position given
 	public char isRobotInPosition(Coordinate pos) {
 		for(Robot r : robots.keySet()) {
 			if(robots.get(r).equals(pos)) {
@@ -229,14 +232,17 @@ public class Grid {
 		return 0;
 	}
 	
+	//Returns map of robots with their coordinates
 	public Map<Robot, Coordinate> getRobots(){
 		return robots;
 	}
 	
+	//Add a robot to the map
 	public void addToRobotsArray(Robot r, Coordinate pos) {
 		this.robots.put(r, pos);
 	}
 	
+	//Returns the final flag number needed to win the game
 	public int getLastFlagNumber() {
 		ArrayList<Integer> flagNumbers = new ArrayList<Integer>();
 		for (GridEntity[] row : entities) {
@@ -254,6 +260,7 @@ public class Grid {
 		}
 	}
 	
+	//Checks if there are starting positions available to add a robot
 	public boolean canAddRobot() {
 		if(robots.size() > 0) {
 			return true;
