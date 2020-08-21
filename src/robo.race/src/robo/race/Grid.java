@@ -15,7 +15,11 @@ import robo.race.entities.GridEntity;
 import robo.race.entities.Pit;
 import robo.race.entities.Robot;
 import robo.race.entities.StartingPosition;
-
+//********************************************************
+//Name: Grid
+//Description: Models a grid with entities
+//
+//********************************************************
 public class Grid {
 	GridEntity[][] entities;
 	Map<Robot, Coordinate> robots;
@@ -31,10 +35,31 @@ public class Grid {
 	
 	private Queue<StartingPosition> populateStartingPositions() {
 		Queue<StartingPosition> startingPosQueue = new LinkedList<StartingPosition>();
+		ArrayList<StartingPosition> spList = new ArrayList<StartingPosition>();
 		for (GridEntity[] row : entities) {
 			for (GridEntity col : row) {
-				if(col instanceof StartingPosition) {		
-					startingPosQueue.add((StartingPosition) col);
+				if(col instanceof StartingPosition) {	
+					spList.add((StartingPosition) col);
+					//startingPosQueue.add((StartingPosition) col);
+				}
+			}
+		}
+		int count = 0;
+		while (startingPosQueue.size() != spList.size()) {
+			for(StartingPosition sp : spList) {
+				char letter = sp.getLetter();
+				if (letter == 'A' && count == 0) {
+					startingPosQueue.add(sp);
+					count++;
+				} else if (letter == 'B' && count == 1) {
+					startingPosQueue.add(sp);
+					count++;
+				} else if (letter == 'C' && count == 2) {
+					startingPosQueue.add(sp);
+					count++;
+				} else if (letter == 'D' && count == 3) {
+					startingPosQueue.add(sp);
+					count++;
 				}
 			}
 		}
@@ -89,108 +114,71 @@ public class Grid {
 		//Check in bounds
 		if(checkIfOutOfBounds(newCoordinate) == false) {
 			robots.put(robot, newCoordinate); //Update position in map
-			robot.setCurrentPosition(newCoordinate);//Update robots own position
+			robot.setCurrentPosition(newCoordinate);
 			//Check if on flag or pit
 			if(getEntity(robot.getCurrentPosition()) instanceof Pit || getEntity(robot.getCurrentPosition()) instanceof Flag) {
 				getEntity(robot.getCurrentPosition()).react(robot);
 			}
 		} else {
-			robots.remove(robot);
 			robot.destroy(); //Destroy robot if out of bounds
 		}
-		//Check if robot already in new position
+		
+		//Check if robot already in new position, handle colision
 		for(Robot r : robots.keySet()) {
+			CompassDirection direction = null;
 			Coordinate oldPosition = robots.get(r);
 			//If new coordinates equal to a position where there is already a robot, move original robot
-			if(oldPosition.getX() == newCoordinate.getX() && oldPosition.getY() == newCoordinate.getY() && !(r.equals(robot))) {
-				//Determine which way robot is facing and move them that way 
-				CompassDirection direction = robot.getCompassDirection();
-				switch(direction) 
-				{ 
-	                case NORTH:
-	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
-	                		Coordinate coordinateN = new Coordinate(oldPosition.getX()-1, oldPosition.getY());
-	                		if(checkIfOutOfBounds(coordinateN) == false) {
-		                		moveRobot(r, coordinateN);
-		                		robots.put(r, coordinateN);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
-	                		Coordinate coordinateN = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
-	                		if(checkIfOutOfBounds(coordinateN) == false) {
-		                		moveRobot(r, coordinateN);
-		                		robots.put(r, coordinateN);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	}
-	                    break; 
-	                case EAST:
-	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
-		                	Coordinate coordinateE = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
-		                	if(checkIfOutOfBounds(coordinateE) == false) {
-		                		robots.put(r, coordinateE);
-			                	moveRobot(r, coordinateE);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
-		                	Coordinate coordinateE = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
-		                	if(checkIfOutOfBounds(coordinateE) == false) {
-		                		robots.put(r, coordinateE);
-			                	moveRobot(r, coordinateE);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	}
-	                    break; 
-	                case SOUTH:
-	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
-		                	Coordinate coordinateS = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
-		                	if(checkIfOutOfBounds(coordinateS) == false) {
-		                		robots.put(r, coordinateS);
-			                	moveRobot(r, coordinateS);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	} else if (robot.getPreviousInstruction() == RobotInstruction.Backward) {
-		                	Coordinate coordinateS = new Coordinate(oldPosition.getX()-1, oldPosition.getY());
-		                	if(checkIfOutOfBounds(coordinateS) == false) {
-		                		robots.put(r, coordinateS);
-			                	moveRobot(r, coordinateS);
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	}
-	                    break;
-	                case WEST: 
-	                	if(robot.getPreviousInstruction() == RobotInstruction.Forward) {
-		                	Coordinate coordinateW = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
-		                	if(checkIfOutOfBounds(coordinateW) == false) {
-		                		robots.put(r, coordinateW);
-			                	moveRobot(r, coordinateW);	
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	} else if(robot.getPreviousInstruction() == RobotInstruction.Backward) {
-		                	Coordinate coordinateW = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
-		                	if(checkIfOutOfBounds(coordinateW) == false) {
-		                		robots.put(r, coordinateW);
-			                	moveRobot(r, coordinateW);	
-		                	} else {
-		                		r.destroy();
-		                	}
-	                	}
-	                    break; 
-	            } 
+			if(oldPosition.equals(newCoordinate) && !(r.equals(robot))) { //If there is a collision
+				Coordinate prevPos = robot.getPreviousPosition();
+				if(newCoordinate.getX() == prevPos.getX()-1 && newCoordinate.getY() == prevPos.getY()) {
+					direction = CompassDirection.NORTH;
+				} else if(newCoordinate.getX() == prevPos.getX()+1 && newCoordinate.getY() == prevPos.getY()) {
+					direction = CompassDirection.SOUTH;
+				} else if(newCoordinate.getX() == prevPos.getX() && newCoordinate.getY() == prevPos.getY()+1) {
+					direction = CompassDirection.EAST;
+				} else if(newCoordinate.getX() == prevPos.getX() && newCoordinate.getY() == prevPos.getY()-1) {
+					direction = CompassDirection.WEST;
+				}
 			}
-				
+			
+			if(direction != null) {
+				switch(direction) 
+				{
+				case NORTH:
+					Coordinate coordinateN = new Coordinate(r.getCurrentPosition().getX()-1, r.getCurrentPosition().getY());
+					if(checkIfOutOfBounds(coordinateN) == false) {
+	            		moveRobot(r, coordinateN);
+	            	} else {
+	            		r.destroy();
+	            	}
+					break;
+				case EAST:
+					Coordinate coordinateE = new Coordinate(oldPosition.getX(), oldPosition.getY()+1);
+	            	if(checkIfOutOfBounds(coordinateE) == false) {
+	                	moveRobot(r, coordinateE);
+	            	} else {
+	            		r.destroy();
+	            	}
+	            	break;
+				case SOUTH:
+					Coordinate coordinateS = new Coordinate(oldPosition.getX()+1, oldPosition.getY());
+	            	if(checkIfOutOfBounds(coordinateS) == false) {
+	                	moveRobot(r, coordinateS);
+	            	} else {
+	            		r.destroy();
+	            	}
+	            	break;
+				case WEST:
+					Coordinate coordinateW = new Coordinate(oldPosition.getX(), oldPosition.getY()-1);
+	            	if(checkIfOutOfBounds(coordinateW) == false) {
+	                	moveRobot(r, coordinateW);	
+	            	} else {
+	            		r.destroy();
+	            	}
+	            	break;
+				}
+			}
 		}
-		
-		
-		
-		
 	}
 	
 	public boolean checkIfOutOfBounds(Coordinate pos) {

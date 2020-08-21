@@ -3,9 +3,14 @@ package robo.race.entities;
 import robo.race.Coordinate;
 import robo.race.Grid;
 import robo.race.RobotInstruction;
-
+//********************************************************
+//Name: Robot
+//Description: Models a robot that takes instructions
+//
+//********************************************************
 public class Robot extends GridEntity {
 	Coordinate startingPosition;
+	Coordinate previousPosition;
 	Grid grid;
 	CompassDirection heading = CompassDirection.NORTH;
 	int lastFlagNum = 0;
@@ -15,6 +20,7 @@ public class Robot extends GridEntity {
 	//Constructor
 	public Robot(Grid grid, Coordinate startingPosition) {
 		this.startingPosition = startingPosition;
+		this.previousPosition = startingPosition;
 		this.setCurrentPosition(startingPosition);
 		this.grid = grid;
 	}
@@ -22,6 +28,7 @@ public class Robot extends GridEntity {
 	//Perform instruction
 	public void perform(RobotInstruction instruction) {
 		Coordinate pos = this.getCurrentPosition();
+		this.previousPosition = pos;
 		switch(instruction)
 		{
 		case Forward: //Move Robot forward
@@ -99,8 +106,8 @@ public class Robot extends GridEntity {
 	
 	//Rotate the robot
 	public void rotate(RotationDirection direction) {
-		if(direction == RotationDirection.Clockwise) {
-			switch(heading) //If rotating clockwise
+		if(direction == RotationDirection.Clockwise) { //If rotating clockwise
+			switch(heading) //Check which way the robot is facing
             { 
                 case NORTH: 
                 	this.heading = CompassDirection.EAST;
@@ -116,8 +123,8 @@ public class Robot extends GridEntity {
                     break; 
             } 
 		} 
-		else if(direction == RotationDirection.AntiClockwise) {
-			switch(heading) //If rotating anticlockwise
+		else if(direction == RotationDirection.AntiClockwise) {//If rotating anti-clockwise
+			switch(heading) //Check which way the robot is facing
             { 
                 case NORTH: 
                 	this.heading = CompassDirection.WEST;
@@ -147,12 +154,16 @@ public class Robot extends GridEntity {
 			Coordinate posW = new Coordinate(startingPosition.getX(), startingPosition.getY()-1);
 			if(grid.checkIfOutOfBounds(posN) == false && grid.isRobotInPosition(posN) == 0) {
 				grid.moveRobot(this, posN);
+				this.previousPosition = (posN);
 			} else if(grid.checkIfOutOfBounds(posE) == false && grid.isRobotInPosition(posE) == 0) {
 				grid.moveRobot(this, posE);
+				this.previousPosition = (posE);
 			} else if(grid.checkIfOutOfBounds(posS) == false && grid.isRobotInPosition(posS) == 0) {
 				grid.moveRobot(this, posS);
+				this.previousPosition = (posS);
 			} else if(grid.checkIfOutOfBounds(posW) == false && grid.isRobotInPosition(posW) == 0) {
 				grid.moveRobot(this, posW);
+				this.previousPosition = (posW);
 			}
 		} else { //If starting position not occupied, move robot there
 			grid.moveRobot(this, startingPosition);
@@ -189,6 +200,10 @@ public class Robot extends GridEntity {
 	
 	public RobotInstruction getPreviousInstruction() {
 		return this.previousInstruction;
+	}
+	
+	public Coordinate getPreviousPosition() {
+		return this.previousPosition;
 	}
 	
 	@Override
