@@ -19,10 +19,8 @@ class robotCollisionTest {
 		try {
 			GridParser gp = new GridParser();
 			Grid grid = gp.parse("collisionBoardTest");
-			grid.addRobot();
-			grid.addRobot();
-			Robot robotB = (Robot) grid.getRobots().keySet().toArray()[0];
-			Robot robotA = (Robot) grid.getRobots().keySet().toArray()[1];
+			Robot robotA = grid.addRobot();
+			Robot robotB = grid.addRobot();
 			System.out.println(robotA.getCurrentPosition().getX());
 			assertEquals(robotA.getCurrentPosition().getX(), 1);
 			robotB.perform(RobotInstruction.Forward);
@@ -30,16 +28,10 @@ class robotCollisionTest {
 			robotB.perform(RobotInstruction.Forward);
 			assertEquals(robotA.getCurrentPosition().getX(), robotA.getStartingPosition().getX()); //Check robot A was destroyed and spawned back
 			assertEquals(robotA.getCurrentPosition().getY(), robotA.getStartingPosition().getY()); //Check robot A was destroyed and spawned back
-			
-			
-			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GridParserException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }

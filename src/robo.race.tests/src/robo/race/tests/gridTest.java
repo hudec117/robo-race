@@ -21,10 +21,8 @@ class gridTest {
 		try {
 			GridParser gp = new GridParser();
 			Grid grid = gp.parse("gridBoardTest");
-			grid.addRobot();
-			grid.addRobot();
-			Robot robotB = (Robot) grid.getRobots().keySet().toArray()[0];
-			Robot robotA = (Robot) grid.getRobots().keySet().toArray()[1];
+			Robot robotA = grid.addRobot();
+			Robot robotB = grid.addRobot();
 			robotA.perform(RobotInstruction.Forward); //Test Pit
 			assertEquals(robotA.getCurrentPosition().getX(), 2);
 			assertEquals(robotA.getCurrentPosition().getY(), 1);
@@ -38,18 +36,10 @@ class gridTest {
 			assertEquals(robotB.getLastFlagNumber(), 0);
 			robotB.perform(RobotInstruction.Forward); //Test Flag
 			assertEquals(robotB.getLastFlagNumber(), 1);
-			
-			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GridParserException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			
 	}
-	
-
-
 }

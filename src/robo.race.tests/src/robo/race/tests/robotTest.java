@@ -21,9 +21,7 @@ class robotTest {
 		GridParser gp = new GridParser();
 		try {
 			Grid grid = gp.parse("robotGridTest");
-			grid.addRobot();
-			Robot robot = (Robot) grid.getRobots().keySet().toArray()[0];
-			//Moving North
+			Robot robot = grid.addRobot();
 			assertEquals(robot.getCurrentPosition().getX(), 1);
 			assertEquals(robot.getCurrentPosition().getY(), 1);
 			robot.perform(RobotInstruction.Forward); //Move Robot forward
@@ -59,10 +57,8 @@ class robotTest {
 			
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GridParserException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -74,8 +70,7 @@ class robotTest {
 		Grid grid;
 		try {
 			grid = gp.parse("robotGridTest");
-			grid.addRobot();
-			Robot robot = (Robot) grid.getRobots().keySet().toArray()[0];
+			Robot robot = grid.addRobot();
 			assertEquals(robot.getCompassDirection(), CompassDirection.NORTH);
 			robot.perform(RobotInstruction.UTurn);
 			assertEquals(robot.getCompassDirection(), CompassDirection.SOUTH);
@@ -86,14 +81,61 @@ class robotTest {
 			assertEquals(robot.getCompassDirection(), CompassDirection.WEST);
 			robot.perform(RobotInstruction.UTurn);
 			assertEquals(robot.getCompassDirection(), CompassDirection.EAST);
-			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GridParserException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Test
+	//Test destroying robot
+	void testRobotDestroy() {
+		GridParser gp = new GridParser();
+		Grid grid;
+		try {
+			grid = gp.parse("robotGridTest");
+			Robot robot = grid.addRobot();
+			
+			robot.perform(RobotInstruction.Forward);
+			assertEquals(robot.getCurrentPosition().getX(), 0);
+			
+			// Destroy robot and assert it moved back to starting position.
+			robot.destroy();
+			assertEquals(robot.getCurrentPosition().getX(), 1);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (GridParserException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	//Test destroying robot
+	void testRobotDestroyCollision() {
+		GridParser gp = new GridParser();
+		Grid grid;
+		try {
+			grid = gp.parse("collisionBoardTest");
+			Robot robotA = grid.addRobot();
+			Robot robotB = grid.addRobot();
+			
+			// Move A and B forward (B is now sitting in A's starting position)
+			robotA.perform(RobotInstruction.Forward);
+			robotB.perform(RobotInstruction.Forward);
+			
+			robotA.perform(RobotInstruction.Forward);
+			
+			// Moves the robot outside of the board, destroying it.
+			robotA.perform(RobotInstruction.Forward);
+			
+			// Assert robot has spawned North of starting position
+			assertEquals(robotA.getStartingPosition().getX() - 1, robotA.getCurrentPosition().getX());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (GridParserException e) {
+			e.printStackTrace();
+		}
 	}
 }
